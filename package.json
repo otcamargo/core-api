@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/otcamargo/core-api/issues"
   },
-  "homepage": "https://github.com/otcamargo/core-api#readme"
+  "homepage": "https://github.com/otcamargo/core-api#readme",
+  "devDependencies": {
+    "ts-node": "^9.1.1"
+  }
 }
