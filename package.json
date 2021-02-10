@@ -1,0 +1,19 @@
+{
+  "name": "core-api",
+  "version": "1.0.0",
+  "description": "Core api to handle basic stuff in the todo app 2.0 project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/otcamargo/core-api.git"
+  },
+  "author": "Otavio Camargo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/otcamargo/core-api/issues"
+  },
+  "homepage": "https://github.com/otcamargo/core-api#readme"
+}
