@@ -103,6 +103,8 @@ dist
 # TernJS port file
 .tern-port
 
-
 # SQlite file
 /src/database/database.sqlite
+
+# vscode file
+.vscode
