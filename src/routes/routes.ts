@@ -6,5 +6,6 @@ const toDoItemsController = new ToDoItemsController();
 
 routes.get('/todo_items', toDoItemsController.index);
 routes.post('/todo_items', toDoItemsController.create);
+routes.delete('/todo_items/:id', toDoItemsController.delete);
 
 export default routes;
