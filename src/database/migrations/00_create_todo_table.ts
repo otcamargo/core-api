@@ -6,7 +6,7 @@ export async function up(knex: Knex) {
     table.integer('user_id').notNullable();
     table.string('content').notNullable();
     table.integer('status').notNullable();
-    table.timestamps();
+    table.timestamps(true, true);
   });
 }
 
