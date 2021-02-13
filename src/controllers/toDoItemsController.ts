@@ -41,10 +41,31 @@ class ToDoItemsController {
     return response.json({ toDoItem });
   }
 
+  async update(request: Request, response: Response) {
+    const { id } = request.params;
+    const {
+      content,
+      status
+    } = request.body
+
+    const updatedItem = await knex('todo_items').where('id', id).first().update({
+      content: content,
+      status: status
+    });
+
+    if(updatedItem) {
+      const item = await knex('todo_items').where('id', id).first();
+      return response.json(item);
+    } else {
+      return response.status(404).send({ error: response.statusCode });
+    }
+  }
+
   async delete(request: Request, response: Response) {
     const { id } = request.params;
 
     const item = await knex('todo_items').where('id', id).first();
+
     if(item) {
       await knex('todo_items').where('id', id).first().delete();
       return response.json(item);
