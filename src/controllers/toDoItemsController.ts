@@ -32,8 +32,6 @@ class ToDoItemsController {
       status
     }
 
-    console.log(toDoItem);
-
     const insertedItem = await trx('todo_items').insert(toDoItem);
 
     await trx.commit();
