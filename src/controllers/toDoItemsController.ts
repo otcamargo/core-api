@@ -1,11 +1,13 @@
 import { Request, Response } from 'express';
 import knex from '../database/connection';
+import toDoItem from '../models/ToDoItem';
 
 class ToDoItemsController {
   async index(request: Request, response: Response) {
-    const toDoItems = await knex('todo_items').select('*');
+    const toDoItemModel = new toDoItem();
+    const allItems = await toDoItemModel.all();
 
-    const serializedToDoItems = toDoItems.map(item => {
+    const serializedToDoItems = allItems.map(item => {
       return {
         id: item.id,
         user_id: item.user_id,
@@ -24,19 +26,11 @@ class ToDoItemsController {
       status
     } = request.body
 
-    const trx = await knex.transaction();
 
-    const toDoItem = {
-      user_id,
-      content,
-      status
-    }
+    const toDoItemModel = new toDoItem();
+    const created_item = await toDoItemModel.create(user_id, content, status);
 
-    const insertedItem = await trx('todo_items').insert(toDoItem);
-
-    await trx.commit();
-
-    return response.json({ toDoItem });
+    return response.json({ created_item });
   }
 
   async update(request: Request, response: Response) {
@@ -46,6 +40,7 @@ class ToDoItemsController {
       status
     } = request.body
 
+/*
     const updatedItem = await knex('todo_items').where('id', id).first().update({
       content: content,
       status: status
@@ -57,6 +52,7 @@ class ToDoItemsController {
     } else {
       return response.status(404).send({ error: response.statusCode });
     }
+    */
   }
 
   async delete(request: Request, response: Response) {
