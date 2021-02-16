@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import knex from '../database/connection';
-import toDoItem from '../models/ToDoItem';
+import ToDoItem from '../models/ToDoItem';
 
 class ToDoItemsController {
   async index(request: Request, response: Response) {
-    const toDoItemModel = new toDoItem();
+    const toDoItemModel = new ToDoItem();
     const allItems = await toDoItemModel.all();
 
     const serializedToDoItems = allItems.map(item => {
@@ -26,11 +26,10 @@ class ToDoItemsController {
       status
     } = request.body
 
-
-    const toDoItemModel = new toDoItem();
+    const toDoItemModel = new ToDoItem();
     const created_item = await toDoItemModel.create(user_id, content, status);
 
-    return response.json({ created_item });
+    return response.json(created_item);
   }
 
   async update(request: Request, response: Response) {
@@ -40,29 +39,24 @@ class ToDoItemsController {
       status
     } = request.body
 
-/*
-    const updatedItem = await knex('todo_items').where('id', id).first().update({
-      content: content,
-      status: status
-    });
+    const toDoItemModel = new ToDoItem();
+    const updatedItem = await toDoItemModel.update(id, content, status);
 
-    if(updatedItem) {
-      const item = await knex('todo_items').where('id', id).first();
-      return response.json(item);
+    if (updatedItem) {
+      return response.json(updatedItem);
     } else {
       return response.status(404).send({ error: response.statusCode });
     }
-    */
   }
 
   async delete(request: Request, response: Response) {
     const { id } = request.params;
 
-    const item = await knex('todo_items').where('id', id).first();
+    const toDoItemModel = new ToDoItem();
+    const deletedItem = await toDoItemModel.delete(id);
 
-    if(item) {
-      await knex('todo_items').where('id', id).first().delete();
-      return response.json(item);
+    if(deletedItem) {
+      return response.json(deletedItem);
     } else {
       return response.status(404).send({ error: response.statusCode });
     }

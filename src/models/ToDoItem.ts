@@ -8,22 +8,22 @@ class ToDoItem {
   }
 
   async create(user_id: Number, content: String, status: Number) {
-    const trx = await knex.transaction();
-
     const toDoItem = {
-      user_id,
+      user_id,  
       content,
       status,
     }
 
+    const trx = await knex.transaction();
+    
     await trx('todo_items').insert(toDoItem);
-
+    
     await trx.commit();
 
     return toDoItem;
   }
 
-  async update(id: Number, content: String, status: Number) {
+  async update(id: String, content: String, status: Number) {
     const updatedItem = await knex('todo_items').where('id', id).first().update({
       content: content,
       status: status
@@ -31,9 +31,19 @@ class ToDoItem {
 
     if(updatedItem) {
       const item = await knex('todo_items').where('id', id).first();
-      return response.json(item);
+      return item;
     } else {
-      return response.status(404).send({ error: response.statusCode });
+      return null;
+    }
+  }
+
+  async delete(id: String) {
+    const item = await knex('todo_items').where('id', id).first();
+    if(item) {
+      await knex('todo_items').where('id', id).first().delete();
+      return item;
+    } else {
+      return null;
     }
   }
 }
