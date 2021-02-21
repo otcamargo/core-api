@@ -1,7 +1,9 @@
 import knex from '../database/connection';
+import {createConnection} from 'typeorm';
 
 class ToDoItem { 
   async all() {
+    const connection = await createConnection();
     const toDoItems = await knex('todo_items').select('*');
 
     return toDoItems;
