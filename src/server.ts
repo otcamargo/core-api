@@ -1,9 +1,13 @@
 import express, { request, response } from 'express'
 import routes from './routes/routes';
+import {createConnection} from "typeorm";
 
-const app = express();
 
-app.use(express.json());
-app.use(routes);
+createConnection().then(connection => {
+  const app = express();
 
-app.listen(3333);
+  app.use(express.json());
+  app.use(routes);
+
+  app.listen(3333);
+});
