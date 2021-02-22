@@ -17,7 +17,3 @@ routes.use("/auth", auth);
 routes.use("/user", user);
 
 export default routes;
-
-
-
-//https://js.plainenglish.io/creating-a-rest-api-with-jwt-authentication-and-role-based-authorization-using-typescript-fbfa3cab22a4
