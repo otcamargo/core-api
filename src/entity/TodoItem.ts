@@ -10,7 +10,9 @@ export class TodoItem extends BaseEntity {
     @Column()
     content!: string;
 
-    @Column()
+    @Column({
+        default: 0,
+    })
     status!: number;
 
 }
