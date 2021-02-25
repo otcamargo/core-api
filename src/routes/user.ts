@@ -16,7 +16,7 @@ router.get(
 );
 
 //Create a new user
-router.post("/", [checkJwt, checkRole(["ADMIN"])], UserController.newUser);
+router.post("/", UserController.newUser);
 
 //Edit one user
 router.patch(

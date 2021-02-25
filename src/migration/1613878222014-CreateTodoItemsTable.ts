@@ -2,9 +2,9 @@ import {MigrationInterface, Table, QueryRunner} from "typeorm";
 
 export class CreateTodoItemsTable1613878222014 implements MigrationInterface {
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
+    public async up(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.createTable(new Table({
-            name: "todo_item",
+            name: "todoItem",
             columns: [
                 {
                     name: "id",
@@ -16,16 +16,20 @@ export class CreateTodoItemsTable1613878222014 implements MigrationInterface {
                     type: "varchar",
                 },
                 {
+                    name: "userId",
+                    type: "int",
+                },
+                {
                     name: "status",
                     type: "int",
                     default: 0
                 },
                 {
-                    name: "created_at",
+                    name: "createdAt",
                     type: "timestamp",
                 },
                 {
-                    name: "updated_at",
+                    name: "updatedAt",
                     type: "timestamp",
                 }
             ]
@@ -33,7 +37,7 @@ export class CreateTodoItemsTable1613878222014 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable("todo_item");
+        await queryRunner.dropTable("todoItem");
     }
 
 }
