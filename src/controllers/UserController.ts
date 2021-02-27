@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
-
 import { User } from "../entity/User";
-import { checkRole } from "../middlewares/checkRole";
 
 class UserController{
 
@@ -18,9 +16,9 @@ class UserController{
   response.send(users);
   };
 
-  static getOneById = async (req: Request, res: Response) => {
+  static getOneById = async (request: Request, response: Response) => {
   //Get the ID from the url
-  const id = Number(req.params.id);
+  const id = Number(request.params.id);
 
   //Get the user from database
   const userRepository = getRepository(User);
@@ -29,7 +27,7 @@ class UserController{
       select: ["id", "username", "role"] //We dont want to send the password on response
     });
   } catch (error) {
-    res.status(404).send("User not found");
+    response.status(404).send("User not found");
   }
   };
 

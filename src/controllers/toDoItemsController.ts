@@ -5,15 +5,8 @@ import { TodoItem } from '../entity/TodoItem';
 class ToDoItemsController {
   async index(request: Request, response: Response) {
     const userId = response.locals.jwtPayload.userId;
-    const allItems = await getRepository(TodoItem).find({ where: { user_id: userId }, order: { id: 'ASC' } })
-
-    const serializedToDoItems = allItems.map(item => {
-      return {
-        user_id: item.user_id,
-        content: item.content,
-        status: item.status
-      };
-    });
+    const todoItemsRepository = getRepository(TodoItem)
+    const allItems = await todoItemsRepository.find({ where: { userId: userId }, order: { id: 'ASC' } })
 
     return response.json(allItems);
   }
@@ -21,13 +14,18 @@ class ToDoItemsController {
   async create(request: Request, response: Response) {
     const userId = response.locals.jwtPayload.userId;
 
-    const newItem = {
-      user_id: userId,
-      content: request.body.content
+    let todoItem = new TodoItem();
+    todoItem.userId = userId;
+    todoItem.content = request.body.content;
+
+    const todoItemsRepository = getRepository(TodoItem);
+    try {
+      await todoItemsRepository.save(todoItem);
+    } catch (e) {
+      return response.status(400).send();
     }
 
-    const createdItem = await getRepository(TodoItem).save(newItem);
-    return response.json(createdItem);
+    return response.status(201).send("Created");
   }
 
   async update(request: Request, response: Response) {
@@ -39,7 +37,7 @@ class ToDoItemsController {
     } = request.body
 
     const updatedItem = {
-      user_id: userId,
+      userId: userId,
       content: content,
       status: status
     }
@@ -61,7 +59,7 @@ class ToDoItemsController {
     const userId = response.locals.jwtPayload.userId;
     
     try {
-      const deletedItem = await getRepository(TodoItem).findOneOrFail({ where: { user_id: userId, id: id }});
+      const deletedItem = await getRepository(TodoItem).findOneOrFail({ where: { userId: userId, id: id }});
       await getRepository(TodoItem).delete(id);
       return response.json(deletedItem);
     } catch (error) {
