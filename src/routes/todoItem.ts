@@ -10,5 +10,4 @@ router.post('/', [checkJwt, checkRole(["ADMIN"])], toDoItemsController.create);
 router.delete('/:id', [checkJwt, checkRole(["ADMIN"])], toDoItemsController.delete);
 router.patch('/:id', [checkJwt, checkRole(["ADMIN"])], toDoItemsController.update);
 
-
 export default router;
