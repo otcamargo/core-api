@@ -7,7 +7,7 @@ import { checkRole } from "../middlewares/checkRole";
 
 class UserController{
 
-  static listAll = async (req: Request, res: Response) => {
+  static listAll = async (request: Request, response: Response) => {
   //Get users from database
   const userRepository = getRepository(User);
   const users = await userRepository.find({
@@ -15,7 +15,7 @@ class UserController{
   });
 
   //Send the users object
-  res.send(users);
+  response.send(users);
   };
 
   static getOneById = async (req: Request, res: Response) => {
@@ -33,9 +33,9 @@ class UserController{
   }
   };
 
-  static newUser = async (req: Request, res: Response) => {
+  static newUser = async (request: Request, response: Response) => {
   //Get parameters from the body
-  let { username, password, role } = req.body;
+  let { username, password, role } = request.body;
   let user = new User();
   user.username = username;
   user.password = password;
@@ -44,7 +44,7 @@ class UserController{
   //Validade if the parameters are ok
   const errors = await validate(user);
   if (errors.length > 0) {
-    res.status(400).send(errors);
+    response.status(400).send(errors);
     return;
   }
 
@@ -56,20 +56,20 @@ class UserController{
   try {
     await userRepository.save(user);
   } catch (e) {
-    res.status(409).send("username already in use");
+    response.status(409).send("username already in use");
     return;
   }
 
   //If all ok, send 201 response
-  res.status(201).send("User created");
+  response.status(201).send("User created");
   };
 
-  static editUser = async (req: Request, res: Response) => {
+  static editUser = async (request: Request, response: Response) => {
   //Get the ID from the url
-  const id = req.params.id;
+  const id = request.params.id;
 
   //Get values from the body
-  const { username, role } = req.body;
+  const { username, role } = request.body;
 
   //Try to find user on database
   const userRepository = getRepository(User);
@@ -78,7 +78,7 @@ class UserController{
     user = await userRepository.findOneOrFail(id);
   } catch (error) {
     //If not found, send a 404 response
-    res.status(404).send("User not found");
+    response.status(404).send("User not found");
     return;
   }
 
@@ -87,7 +87,7 @@ class UserController{
   user.role = role;
   const errors = await validate(user);
   if (errors.length > 0) {
-    res.status(400).send(errors);
+    response.status(400).send(errors);
     return;
   }
 
@@ -95,29 +95,29 @@ class UserController{
   try {
     await userRepository.save(user);
   } catch (e) {
-    res.status(409).send("username already in use");
+    response.status(409).send("username already in use");
     return;
   }
   //After all send a 204 (no content, but accepted) response
-  res.status(204).send();
+  response.status(204).send();
   };
 
-  static deleteUser = async (req: Request, res: Response) => {
+  static deleteUser = async (request: Request, response: Response) => {
   //Get the ID from the url
-  const id = req.params.id;
+  const id = request.params.id;
 
   const userRepository = getRepository(User);
   let user: User;
   try {
     user = await userRepository.findOneOrFail(id);
   } catch (error) {
-    res.status(404).send("User not found");
+    response.status(404).send("User not found");
     return;
   }
   userRepository.delete(id);
 
   //After all send a 204 (no content, but accepted) response
-  res.status(204).send();
+  response.status(204).send();
   };
 };
 
