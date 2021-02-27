@@ -2,18 +2,18 @@ import { Request, Response, NextFunction } from "express";
 import * as jwt from "jsonwebtoken";
 import config from "../config/config";
 
-export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
+export const checkJwt = (request: Request, response: Response, next: NextFunction) => {
   //Get the jwt token from the head
-  const token = <string>req.headers["auth"];
+  const token = <string>request.headers["auth"];
   let jwtPayload;
   
   //Try to validate the token and get data
   try {
     jwtPayload = <any>jwt.verify(token, config.jwtSecret);
-    res.locals.jwtPayload = jwtPayload;
+    response.locals.jwtPayload = jwtPayload;
   } catch (error) {
     //If token is not valid, respond with 401 (unauthorized)
-    res.status(401).send();
+    response.status(401).send();
     return;
   }
 
@@ -23,7 +23,7 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
   const newToken = jwt.sign({ userId, username }, config.jwtSecret, {
     expiresIn: "1h"
   });
-  res.setHeader("token", newToken);
+  response.setHeader("token", newToken);
 
   //Call the next middleware or controller
   next();

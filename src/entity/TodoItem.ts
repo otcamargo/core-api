@@ -1,11 +1,12 @@
-import { Entity, Column } from "typeorm";
+import { Entity, Column, ManyToOne } from "typeorm";
 import { BaseEntity } from "./BaseEntity";
+import { User } from "./User";
 
 @Entity()
 export class TodoItem extends BaseEntity {
 
-    @Column()
-    user_id!: number;
+    @ManyToOne(() => User, user => user.todoItems)
+    userId!: User;
 
     @Column()
     content!: string;
@@ -14,5 +15,4 @@ export class TodoItem extends BaseEntity {
         default: 0,
     })
     status!: number;
-
 }

@@ -5,15 +5,8 @@ import { TodoItem } from '../entity/TodoItem';
 class ToDoItemsController {
   async index(request: Request, response: Response) {
     const userId = response.locals.jwtPayload.userId;
-    const allItems = await getRepository(TodoItem).find({ where: { user_id: userId }, order: { id: 'ASC' } })
-
-    const serializedToDoItems = allItems.map(item => {
-      return {
-        user_id: item.user_id,
-        content: item.content,
-        status: item.status
-      };
-    });
+    const todoItemRepository = getRepository(TodoItem)
+    const allItems = await todoItemRepository.find({ where: { userId: userId }, order: { id: 'ASC' } })
 
     return response.json(allItems);
   }
@@ -21,13 +14,18 @@ class ToDoItemsController {
   async create(request: Request, response: Response) {
     const userId = response.locals.jwtPayload.userId;
 
-    const newItem = {
-      user_id: userId,
-      content: request.body.content
+    let todoItem = new TodoItem();
+    todoItem.userId = userId;
+    todoItem.content = request.body.content;
+
+    const todoItemRepository = getRepository(TodoItem)
+    try {
+      await todoItemRepository.save(todoItem);
+    } catch (e) {
+      return response.status(400).send();
     }
 
-    const createdItem = await getRepository(TodoItem).save(newItem);
-    return response.json(createdItem);
+    return response.status(201).send(todoItem);
   }
 
   async update(request: Request, response: Response) {
@@ -38,21 +36,22 @@ class ToDoItemsController {
       status
     } = request.body
 
-    const updatedItem = {
-      user_id: userId,
-      content: content,
-      status: status
+    const todoItemRepository = getRepository(TodoItem)
+    let item;
+    try {
+      item = await todoItemRepository.findOneOrFail(id)
+    } catch (error) {
+      response.status(404).send("Item not found");
+      return;
     }
 
-
+    item.content = content;
+    item.status = status;
     try {
-      const outdatedItem = await getRepository(TodoItem).findOneOrFail(id);
-      outdatedItem.content = updatedItem.content;
-      outdatedItem.status = updatedItem.status;
-      await getRepository(TodoItem).save(outdatedItem);
-      return response.json(updatedItem);
+      await todoItemRepository.save(item);
+      return response.json(item);
     } catch (error) {
-      response.status(404).send("Not found");
+      response.status(404).send("Error");
     }
   }
 
@@ -60,13 +59,19 @@ class ToDoItemsController {
     const { id } = request.params;
     const userId = response.locals.jwtPayload.userId;
     
+    const todoItemRepository = getRepository(TodoItem)
+
+    let todoItem: TodoItem;
     try {
-      const deletedItem = await getRepository(TodoItem).findOneOrFail({ where: { user_id: userId, id: id }});
-      await getRepository(TodoItem).delete(id);
-      return response.json(deletedItem);
+      todoItem = await todoItemRepository.findOneOrFail({ where: { userId: userId, id: id }});
     } catch (error) {
       response.status(404).send("Not found");
+      return;
     }
+
+    todoItemRepository.delete(id);
+
+    response.status(204).send();
   }
 }
 
