@@ -9,6 +9,9 @@ export class TodoItem extends BaseEntity {
     userId!: User;
 
     @Column()
+    title!: string;
+
+    @Column()
     content!: string;
 
     @Column({

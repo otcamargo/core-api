@@ -12,6 +12,10 @@ export class CreateTodoItemsTable1613878222014 implements MigrationInterface {
                     isPrimary: true
                 },
                 {
+                    name: "title",
+                    type: "varchar",
+                },
+                {
                     name: "content",
                     type: "varchar",
                 },
@@ -73,7 +77,7 @@ export class CreateTodoItemsTable1613878222014 implements MigrationInterface {
             columnNames: ['userId'],
             referencedTableName: "user",
             referencedColumnNames: ['id'],
-            onDelete: 'CASCADE'
+            onDelete: "CASCADE"
           })
         );
 
