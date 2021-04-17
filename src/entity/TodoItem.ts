@@ -8,7 +8,9 @@ export class TodoItem extends BaseEntity {
     @ManyToOne(() => User, user => user.todoItems)
     userId!: User;
 
-    @Column()
+    @Column({
+        nullable: false
+    })
     title!: string;
 
     @Column()

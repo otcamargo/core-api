@@ -16,6 +16,7 @@ class ToDoItemsController {
 
     let todoItem = new TodoItem();
     todoItem.userId = userId;
+    todoItem.title = request.body.title;
     todoItem.content = request.body.content;
 
     const todoItemRepository = getRepository(TodoItem)
