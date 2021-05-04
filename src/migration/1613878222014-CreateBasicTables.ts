@@ -25,8 +25,8 @@ export class CreateTodoItemsTable1613878222014 implements MigrationInterface {
                 },
                 {
                     name: "status",
-                    type: "int",
-                    default: 0
+                    type: "enum",
+                    default: "created"
                 },
                 {
                     name: "createdAt",

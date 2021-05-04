@@ -2,6 +2,8 @@ import { Entity, Column, ManyToOne } from "typeorm";
 import { BaseEntity } from "./BaseEntity";
 import { User } from "./User";
 
+export type Status = "created" | "done"
+
 @Entity()
 export class TodoItem extends BaseEntity {
 
@@ -17,7 +19,9 @@ export class TodoItem extends BaseEntity {
     content!: string;
 
     @Column({
-        default: 0,
+        type: "enum",
+        enum: ["created", "in_progress", "done"],
+        default: "created",
     })
-    status!: number;
+    status!: Status;
 }
