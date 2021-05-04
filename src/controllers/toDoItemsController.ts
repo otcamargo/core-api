@@ -5,8 +5,8 @@ import { TodoItem } from '../entity/TodoItem';
 class ToDoItemsController {
   async index(request: Request, response: Response) {
     const userId = response.locals.jwtPayload.userId;
-    const todoItemRepository = getRepository(TodoItem)
-    const allItems = await todoItemRepository.find({ where: { userId: userId }, order: { id: 'ASC' } })
+    const todoItemRepository = getRepository(TodoItem);
+    const allItems = await todoItemRepository.find({ where: { userId: userId }, order: { id: 'ASC' } });
 
     return response.json(allItems);
   }
